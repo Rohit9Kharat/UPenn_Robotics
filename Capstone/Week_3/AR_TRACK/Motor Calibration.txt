@@ -1,0 +1,30 @@
+Motor Model
+We can model the rover as a differential drive, whose linear and angular velocity is related to the rate of rotation of each wheel by:
+
+
+Where u_l and u_r are the angular velocities of the left and right wheels respectively, r is the radius of each wheel and L is the distance between the wheels. So, given a commanded linear and angular velocity, we can compute the left and right wheel angular velocities with the following equations:
+
+
+Finally, making the assumption that there is a linear relationship between motor voltage and wheel angular velocity, we can compute the commanded voltage for the motor to be:
+
+
+While it is easy to measure the wheel radius and the distance between the wheels, it is difficult to determine the true RPM of the motors, which is why we need to perform an extra calibration step.
+
+If you would like more information on differential drive models, please refer to:
+
+http://planning.cs.uiuc.edu/node659.html
+
+Calibration
+For this calibration, we will perform a very basic gain tuning, where we drive the rover forwards at a set speed for 1 second, and then measuring the actual distance traveled by the robot, and using the difference to tune the ratio between gear ratio and max rpm. One simple way to do this is by lining the wheels of a robot up with a ruler and measuring where it ends up, as seen in the image below.
+
+Hint: to spin the wheels for a set amount of time, you can measure the start time using the following ROS API call:
+
+time = rospy.get_time()
+
+Then, you can command the robot to move at a certain velocity and, once rospy.get_time()-time exceeds 1, command the robot to stop.
+
+To change the gains of the robot, edit the file located at:
+
+/home/pi/catkin_ws/src/dc_motor_driver/params/motor_params.yaml
+
+The parameter motor_gain is the ratio between gear ratio and max rpm. Increasing this value will increase the distance the rover travels within a second at a given velocity. You may also change the parameters wheel_radius and wheel_sep, which are r and L as defined above, but you should not have to if you are using the course kit.

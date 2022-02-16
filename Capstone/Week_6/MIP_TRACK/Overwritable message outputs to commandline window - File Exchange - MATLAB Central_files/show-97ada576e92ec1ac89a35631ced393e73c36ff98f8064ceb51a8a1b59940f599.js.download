@@ -1,0 +1,198 @@
+$(function () {
+    var announcementBanner = document.getElementById("announcementBanner");
+
+    if (announcementBanner) {
+        var bannerUrl = announcementBanner.getAttribute('data-banner-url');
+
+        $.ajax({
+            url: bannerUrl,
+            dataType: 'script',
+            success: function () {
+                function remainClosed() {
+                    var expiresDate = new Date('June 1 2020 00:00:00 GMT').toUTCString();
+                    document.cookie = "hide_announcement_banner=true;path=/matlabcentral/fileexchange;expires=" + expiresDate;
+                }
+
+                var bannerContainer = document.getElementById('announcementBanner')
+
+                if (bannerContainer) {
+                    $(bannerContainer).on("close.bs.alert", remainClosed);
+                }
+            }
+        });
+    }
+});
+$(function () {
+    $("#matlab_fileexchange_badge_copy").on("click", function() {
+        var btn = $(this);
+        var content = $("#copy_markdown_content");
+        var originalTitle = btn.attr("data-original-title");
+
+        content.focus();
+        content.select();
+        var isCopied = document.execCommand("copy");
+        content.blur();
+        window.getSelection().removeAllRanges();
+
+        var tooltipTitle = isCopied ? originalTitle : "Unable to copy. Please copy the markdown manually.";
+
+        btn.attr("title", tooltipTitle).tooltip("fixTitle").tooltip("show");
+
+        setTimeout(function(){
+          btn.tooltip("hide");
+        }, 2000);
+    });
+});
+$(function () {
+  var trackDownloads = function (loggedIn) {
+    if(loggedIn) {
+      //Digital Data Events tracking
+      if (typeof(digitalData) !== 'undefined' && digitalData &&
+          typeof(_satellite) !== 'undefined' && _satellite) {
+        digitalData.events = [];
+        eventHolder = {
+          "eventInfo": {
+            "eventName": "fxFileDownload",
+            "eventAction": "fileDownload",
+            "eventId": Math.round(Math.random() * 10000000000)
+          }
+        }
+        digitalData.events.push(eventHolder);
+        _satellite.track("mlcEvents");
+      }
+    }
+  };
+  var downloadURL = function(url) {
+    window.open(url, '_blank');
+  };
+  var download = function (url, loggedIn, event) {
+    trackDownloads(loggedIn);
+    if(loggedIn) {
+      event.preventDefault();
+      downloadURL(url);
+    }
+  };
+  $('a.link--download').click(function (event) {
+    download(this.href, !$(this).data('logintodownload'), event);
+  });
+});
+$(function () {
+  var followUiContainer = document.getElementById('follow');
+
+  if (!followUiContainer) {
+    return;
+  }
+
+  var fileExchangeId = followUiContainer.getAttribute('data-fileexchange-id');
+
+  // Set initial following button
+  $.ajax({
+    url: window.location.origin + '/matlabcentral/fileexchange/' + fileExchangeId + '/follow',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      followUiContainer.innerHTML = data.form;
+      assignFollowButtonEventHandler(followUiContainer);
+    }
+  });
+
+  var assignFollowButtonEventHandler = function (followUiContainer) {
+    var followForm = followUiContainer.querySelector('form');
+
+    followForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      updateFollowingStatus(followUiContainer);
+    });
+  }
+
+  // Follow/unfollow and update button
+  var updateFollowingStatus = function (followUiContainer) {
+    var fileExchangeId = followUiContainer.getAttribute('data-fileexchange-id');
+
+    var followForm = followUiContainer.querySelector("form");
+    var url = followForm.getAttribute("action");
+
+    var postData = {
+      file_exchange_id: fileExchangeId
+    };
+
+    if (followForm.querySelector("input[name=_method]")) {
+      postData._method = 'DELETE';
+    }
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      dataType: 'json',
+      data: postData,
+      success: function(data) {
+        followUiContainer.innerHTML = data.form;
+        assignFollowButtonEventHandler(followUiContainer);
+        if (data.following === true) {
+          document.getElementById("followSuccess").classList.remove("hidden");
+        } else {
+          document.getElementById("followSuccess").classList.add("hidden");
+        }
+      }
+    })
+  };
+});
+function createOptions() {
+    var options = {};
+
+    options.targetElementClassName = "relatedContentSpotlight";
+    options.cacheRequests = JSON.parse(true);
+    options.async = JSON.parse(true);
+    options.debug = JSON.parse(false);
+    options.heading = '';
+    options.showHeading = JSON.parse(false);
+    options.maxTitleLength = 128;
+    options.maxDescriptionLength = 72;
+    options.maxSummaryLength = 50;
+    options.collections = "entire_site";
+    options.fields = ["thumbnail", "title_en","url","call_to_action"];
+    options.rows = 1;
+    options.startAt = 1;
+    options.serviceUrl = "/searchresults/condensed/related/content/en/v1";
+    options.unHideIds = ["staticSpotlight"];
+    options.text = document.getElementById(options.targetElementClassName).getAttribute("addonTitle") + " " +
+                    document.getElementById(options.targetElementClassName).getAttribute("addonSummary") + " " +
+                    document.getElementById(options.targetElementClassName).getAttribute("addonTags");
+
+    options.filters = ["(subcollection:offers)"];
+
+    options.itemTemplate = "<div class=\"panel panel-default add_cursor_pointer\" onclick=\"location.href='{{url}}';\">"+
+                            "<div class=\"panel-heading add_padding_0\"><img class=\"fluid_image\" src=\"{{thumbnail}}\" title=\"{{title_en}}\" alt=\"{{title_en}}\"></div>"+
+                            "<div class=\"panel-body\">"+
+                            "<h3>{{title_en}}</h3>"+
+                            "<p><a href=\"{{url}}\" class=\"icon-chevron\">{{call_to_action}}</a></p>"+
+                            "</div>"+
+                            "</div>";
+
+    options.tracking = callbackFunctionForTrackingCode;
+
+    function callbackFunctionForTrackingCode(url) {
+        var addonPath = document.getElementById(options.targetElementClassName).getAttribute("addonPath");
+        var regex = /(?!.*\/).+(?=\.)/;
+        var match = regex.exec(url);
+        var trackingCode = "s_iid=" + ["fx_" + addonPath + "_rcspot"]
+
+        if (url.indexOf("?") > -1) {
+            return url + "&" + trackingCode;
+        } else {
+            return url + "?" + trackingCode;
+        }
+    }
+
+    mwCondensedRelatedContentLib.init(options);
+}
+
+
+jQuery(document).ready(function(){
+    createOptions();
+});
+
+
+
+
+

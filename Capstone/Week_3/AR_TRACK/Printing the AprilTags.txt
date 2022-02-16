@@ -1,0 +1,8 @@
+Software
+In order to inform the AprilTag detector of the AprilTags it needs to look for as well as the size of the tags, you must edit the file located at:
+
+/home/pi/catkin_ws/src/robot_launch/launch/tag_detection.launch
+
+In this file, you will see a list of tag_ids and their corresponding sizes (length of one side of the black square. Only tags listed in this file will be detected, so you must edit this file each time you change the tags that you are using.
+
+Note: The code requires that the tags defined in the world map be in consecutive order. That is, if you want to use 4 tags, you must have tags 0, 1, 2, 3, and not 1, 2, 3, 4 or 0, 1, 3, 4 etc.

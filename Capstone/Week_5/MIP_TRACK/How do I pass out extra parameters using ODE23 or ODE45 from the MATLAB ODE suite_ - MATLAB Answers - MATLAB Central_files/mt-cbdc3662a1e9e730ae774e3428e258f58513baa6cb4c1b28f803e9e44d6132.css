@@ -1,0 +1,44 @@
+#WidgetFloaterPanels {
+  display: none !important;
+}
+.translation_banner { display: none; }
+.msft_logo {
+  height:auto !important; width:100px !important; margin-top:-3px; display:inline-block;
+}
+.translation_banner .icon-remove { margin-right: 60px; }
+button.mt-button { padding: 0 3px 2px 2px !important; display: none; }
+
+.spinner {
+  display: inline-block;
+  opacity: 0;
+  width: 0;
+
+  -webkit-transition: opacity 0.25s, width 0.25s;
+  -moz-transition: opacity 0.25s, width 0.25s;
+  -o-transition: opacity 0.25s, width 0.25s;
+  transition: opacity 0.25s, width 0.25s;
+}
+
+.has-spinner.active {
+  cursor:progress;
+}
+
+.has-spinner.active .spinner {
+  opacity: 1;
+  width: auto;
+}
+
+.mt-link:hover {
+  cursor:pointer;
+}
+
+.translate_comment_desktop .mt-text {
+  display: none;
+}
+
+#leaf-answer-translation-btn, #leaf-question-translation-btn, #leaf-comment-translation-btn{
+  padding-left: 2rem;
+}
+#leaf-answer-translation-btn::before, #leaf-question-translation-btn::before, #leaf-comment-translation-btn::before{
+    margin-left: -1.4em;
+}

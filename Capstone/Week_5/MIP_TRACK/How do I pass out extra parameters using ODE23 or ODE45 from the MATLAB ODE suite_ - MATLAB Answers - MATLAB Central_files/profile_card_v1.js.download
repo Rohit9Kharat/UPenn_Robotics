@@ -1,0 +1,495 @@
+(function($){
+
+  $( document ).ready(function() {
+    var language = {
+        'en': {
+          reputation : 'Reputation',
+          accepted_answers : 'Accepted answers',
+          questions_asked : 'Questions asked',
+          answers : 'Answers',
+          posts : 'Posts',
+          contributions: 'contributions',
+          since: 'since'
+        },
+
+        'ja': {
+          reputation : '評価',
+          accepted_answers : '採用された回答',
+          questions_asked : '尋ねた質問',
+          answers : '回答',
+          posts : '投稿'
+        },
+
+        'ko': {
+          reputation : '평판',
+          accepted_answers : '채택',
+          questions_asked : '제출한 질문',
+          answers : '답변'
+        },
+
+        'zh': {
+          reputation : 'Reputation',
+          accepted_answers : 'Accepted answers',
+          questions_asked : 'Questions asked',
+          answers : 'Answers'
+        },
+
+        'en-US':{
+          files: 'Files',
+          downloads: 'Downloads'
+        },
+
+        'ja-JP':{
+          files: 'ファイル',
+          downloads: 'ダウンロード'
+        },
+
+        'ko-KR':{
+          files: '파일들',
+          downloads: '다운로드'
+        },
+
+        'zh-CN':{
+          files: 'Files',
+          downloads: 'Downloads'
+        }
+
+       };
+
+       class Card {
+           constructor(cardElem, appName, result, locale, id, domain) {
+                this.cardElem = cardElem;
+                this.appName = appName;
+                this.result = result;
+                this.locale = locale;
+                this.id = id;
+                this.domain = domain;
+                this.imageUrl = result.profile.image !== null ? 'https://'+domain+'/responsive_image/100/0/0/0/0/cache/matlabcentral/profiles/'+result.profile.image : 'https://'+domain+'/matlabcentral/images/profilepic_default.gif';
+           }
+           create() {
+                 //top section  - profile name and display picture and staff icon if any
+                 this.cardElem.innerHTML =
+                  `
+                   <div class="row add_margin_15">
+                       <div class="col-xs-2">
+                          <div class="profile__image">
+                            <a href="https://${card.domain}/matlabcentral/profile/authors/${card.id}" target = "_blank">
+                              <img src="${card.imageUrl}" height="45" width="45" class="add_border_radius_50">
+                            </a>
+                          </div>
+                       </div>
+
+                       <div class="col-xs-8">
+                             <strong><h4 class="profile_name add_margin_5" data-toggle="tooltip" title="Go to ${card.result.profile.nickname} 's profile"><a href="https://${card.domain}/matlabcentral/profile/authors/${card.id}" target = "_blank">${card.result.profile.nickname}</a></h4></strong>
+                             ${card.result.profile.staff === true ? '<section class="section_downsize"><span id="staff_indicator" class="icon-mw-staff add_font_color_darkblue" data-toggle="tooltip" title="MathWorks Staff" data-original-title="MathWorks Staff" style="font-size:80%;"></span></section>':""}
+                       </div>
+
+                       <div class="col-xs-2">
+                            ${card.result.profile.allow_contact === true ? '<a href=https://'+card.domain+'/matlabcentral/profile/contact/'+card.id+'><span id="contact_button" class="icon-email icon_16" data-toggle="tooltip" title="Email"></span></a>':""}
+                       </div>
+                   </div>
+                 `;
+
+                 //app specific local Info
+                 let cardContainer = document.createElement('div');
+                 cardContainer.classList.add('row');
+                 if (card.appName === 'answers')
+                  {
+                   cardContainer.innerHTML =
+                   `
+                     <div class="col-xs-6">
+                           <ul class="list-unstyled section_downsize add_margin_10">
+                            <li property="answers_reputation">
+                             <span class="icon-rating add_font_color_mediumgray" aria-hidden="true"></span>
+                             ${language[card.locale].reputation}: ${card.result.answers.reputation !== null ? numberWithCommas(card.result.answers.reputation) : "0" }
+                           </li>
+                           <li property="answers_accepted">
+                             <span class="icon-check add_font_color_mediumgray" aria-hidden="true"></span>
+                             ${numberWithCommas(card.result.answers.number_of_accepted_answers)} ${language[card.locale].accepted_answers}
+                           </li>
+                          </ul>
+                     </div>
+
+                     <div class="col-xs-6">
+                          <ul class="list-unstyled section_downsize add_margin_10">
+                          <li property="questions_asked">
+                            <span class="icon-contactus add_font_color_mediumgray" aria-hidden="true"></span>
+                            ${ card.result.answers.number_of_questions === 0?  numberWithCommas(card.result.answers.number_of_questions)+' '+language[card.locale].questions_asked:'<a href=/matlabcentral/answers/?term=asked_by_id:'+card.result.answers.contributor_id+' target = _blank>' +numberWithCommas(card.result.answers.number_of_questions)+' '+language[card.locale].questions_asked+'</a>'}
+                          </li>
+                          <li property="answers">
+                            <span class="icon-answers add_font_color_mediumgray" aria-hidden="true"></span>
+                            ${ card.result.answers.number_of_answers === 0?  numberWithCommas(card.result.answers.number_of_answers)+' '+language[card.locale].answers:'<a href=/matlabcentral/answers/?term=answered_by_id:'+card.result.answers.contributor_id+' target = _blank>' +numberWithCommas(card.result.answers.number_of_answers)+' '+language[card.locale].answers+'</a>'}
+                          </li>
+                         </ul>
+                     </div>
+                    `;
+
+                  }
+                  else if (card.appName === 'fileexchange')
+                  {
+                    cardContainer.innerHTML =
+                    `
+                    <div class="col-xs-6">
+                          <ul class="list-unstyled section_downsize add_margin_10">
+                            <li>
+                             <span class="icon-fileexchange add_font_color_mediumgray"></span>
+                             ${ card.result.fileexchange.number_of_files === 0?  numberWithCommas(card.result.fileexchange.number_of_files)+' '+language[card.locale].files:'<a href=/matlabcentral/fileexchange/?q=profileid:'+card.id+' target = _blank>' +numberWithCommas(card.result.fileexchange.number_of_files)+' '+language[card.locale].files+'</a>'}
+                            </li>
+                            <li>
+                              <div class="rating_block" title="${card.result.fileexchange.average_rating !== null ? card.result.fileexchange.average_rating : "0" }">
+                                 <div class="rate_scale">
+                                  <div class="rated" style="width: ${card.result.fileexchange.average_rating * 20}%">${card.result.fileexchange.average_rating !== null ? card.result.fileexchange.average_rating : "0" }</div>
+                                 </div>
+                              </div>
+                            </li>
+                          </ul>
+                     </div>
+
+                    <div class="col-xs-6">
+                         <ul class="list-unstyled section_downsize add_margin_10">
+                            <li>
+                            <span class="icon-download add_font_color_mediumgray"></span> <span>${card.result.fileexchange.downloads !== null ? numberWithCommas(card.result.fileexchange.downloads) : "0"+' '+language[card.locale].downloads}</span>
+                            </li>
+                         </ul>
+                    </div>
+                     `;
+                  }
+                  else if (card.appName === 'cody')
+                  {
+                    cardContainer.innerHTML =
+                    `
+                      <div class="col-xs-6">
+                          <ul class="list-unstyled section_downsize add_margin_10">
+                            <li>
+                              <span class="icon-mw-badge add_font_color_mediumgray"></span><span>${card.result.cody.badges_count !== null ? card.result.cody.badges_count : "0" } Badges</span>
+                            </li>
+                            <li>
+                              <span class="icon-link add_font_color_mediumgray"></span>
+                              <a href="/matlabcentral/cody/players/${card.id}" target = "_blank" >Cody profile</a>
+                            </li>
+                           </ul>
+                      </div>
+
+                      <div class="col-xs-6">
+                          <ul class="list-unstyled section_downsize add_margin_10">
+                            <li>
+                              <span class="icon-rating add_font_color_mediumgray"></span> <span>Score: ${card.result.cody.score !== null ? card.result.cody.score : "0" }</span>
+                            </li>
+                          </ul>
+                      </div>
+                    `;
+                  }
+                  else if (card.appName === 'blogs')
+                  {
+                    cardContainer.innerHTML =
+                    `
+                      <div class="col-xs-12">
+                          <ul class="list-unstyled section_downsize add_margin_10 add_padding_5">
+                            <li><span class="icon-blogs add_font_color_mediumgray"></span> <span>${card.result.blogs.no_of_posts !== null ? card.result.blogs.no_of_posts : "0" } ${language[card.locale].posts}</span></li>
+                          </ul>
+                      </div>
+                    `;
+
+                  }
+                  else if (card.appName === 'cmtyhome')
+                  {
+                    var yearJoined =  new Date(card.result.profile.time_joined).getFullYear()
+                    cardContainer.innerHTML =
+                    `  <div class="col-xs-12">
+                        <ul class="list-unstyled add_margin_10 section_downsize">
+                          <li><span class="icon-arrow-right add_font_color_mediumgray"></span>
+                          <span class="add_font_color_darkorange section_upsize">${numberWithCommas(card.result.profile.number_of_contributions)}</span>
+                          <span class="add_font_color_mediumgray"> ${language[card.locale].contributions}
+                          ${card.result.profile.time_joined !== null && yearJoined > 0 ?  language[card.locale].since+' '+ yearJoined : "" }</span></li>
+                        </ul>
+                       </div>
+                    `;
+
+                  }
+
+               this.cardElem.appendChild(cardContainer);
+
+               //Cross community stats
+               let cardFooter = document.createElement('div');
+               cardFooter.classList.add('row', 'community_stats', 'add_background_color_gray', 'add_padding_10');
+
+               if(card.result.profile.blogger === true)
+                {
+                   cardFooter.innerHTML =
+                    `        <div class="col-xs-3">
+                                  <div class="add_font_color_darkorange"><strong>Answers</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.answers.rank !== null ? abbreviateNumber(card.result.answers.rank) : "-" }</section>
+                                  <div class="add_font_color_mediumgray">Rank of ${card.result.answers.last_rank !== null ? abbreviateNumber(card.result.answers.last_rank) : "-" }</div>
+                              </div>
+
+                              <div class="col-xs-3">
+                                  <div class="add_font_color_darkorange"><strong>Blogs</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.blogs.no_of_posts !== null ? abbreviateNumber(card.result.blogs.no_of_posts) : "-" } </section>
+                                  <div class="add_font_color_mediumgray">Posts</div>
+                              </div>
+
+                              <div class="col-xs-3">
+                                  <div class="add_font_color_darkorange"><strong>Cody</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.cody.rank !== null ? abbreviateNumber(card.result.cody.rank) : "-" } </section>
+                                  <div class="add_font_color_mediumgray">Rank of ${card.result.cody.last_rank !== null ? abbreviateNumber(card.result.cody.last_rank) : "-" }</div>
+                              </div>
+
+                              <div class="col-xs-3">
+                                  <div class="add_font_color_darkorange"><strong>File Exchange</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.fileexchange.rank !== null ? abbreviateNumber(card.result.fileexchange.rank) : "-" } </section>
+                                  <div class="add_font_color_mediumgray">Rank of ${card.result.fileexchange.last_rank !== null ? abbreviateNumber(card.result.fileexchange.last_rank) : "-" }</div>
+                              </div>
+                   `;
+                }
+                else {
+                   cardFooter.innerHTML =
+                    `         <div class="col-xs-4">
+                                  <div class="add_font_color_darkorange"><strong>Answers</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.answers.rank !== null ? abbreviateNumber(card.result.answers.rank) : "-" }</section>
+                                  <div class="add_font_color_mediumgray">Rank of ${card.result.answers.last_rank !== null ? abbreviateNumber(card.result.answers.last_rank) : "-" }</div>
+                              </div>
+
+                              <div class="col-xs-4">
+                                  <div class="add_font_color_darkorange"><strong>Cody</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.cody.rank !== null ? abbreviateNumber(card.result.cody.rank) : "-" } </section>
+                                  <div class="add_font_color_mediumgray">Rank of ${card.result.cody.last_rank !== null ? abbreviateNumber(card.result.cody.last_rank) : "-" }</div>
+                              </div>
+
+                              <div class="col-xs-4">
+                                  <div class="add_font_color_darkorange"><strong>File Exchange</strong></div>
+                                  <section class="section_upsize add_font_color_mediumgray">${card.result.fileexchange.rank !== null ? abbreviateNumber(card.result.fileexchange.rank) : "-" } </section>
+                                  <div class="add_font_color_mediumgray">Rank of ${card.result.fileexchange.last_rank !== null ? abbreviateNumber(card.result.fileexchange.last_rank) : "-" }</div>
+                              </div>
+                    `;
+
+                }
+
+               this.cardElem.appendChild(cardFooter);
+           }
+        }
+
+
+    //event listner
+    $('.author_inline').unbind().click(function(e){
+         e.preventDefault();
+         let link = e.currentTarget,
+             this_js_script = $('script[src*=profile_card]'),
+             app = this_js_script.attr('data-app-name'),
+             domain = this_js_script.attr('src').match(/\/\/([^\/]*)\//)[1],
+             id = $(link).attr('href').split('/').pop().split('-')[0],
+             locale = (!['en','ja','ko','zh'].includes($(link).data("locale-id"))) ? 'en' : $(link).data("locale-id");
+
+          profUrl = 'https://'+domain+'/matlabcentral/profile/api/v1/profile_summary/'+id;
+
+          // function for positioning the card
+          let positionCard = function (target){
+
+                  let windowWidth = $(window).width();
+                  var windowHeight = $(window).height();
+                  var windowScrollHeight = $(window).scrollTop();
+
+                  var profileLinkLeft = $(link).offset().left;
+                  var profileLinkRight = $(link).offset().left + target.outerWidth();
+                  var profileLinkBottom = $(link).offset().top + target.outerHeight();
+
+                  var leftPosition = $(link).offset().left - 20;
+                  var topPosition = $(link).offset().top - 25;
+
+                  // adjust horizontal placement so profile link is clipped as little as possible on the right
+                  // this assumes that there is no horizontal scroll due to the resposive design
+                  if (profileLinkRight > windowWidth) {
+
+                      // find maximum left adjustment
+                      if ((target.outerWidth() + 6) > windowWidth) {
+                        leftPosition -= profileLinkLeft - 24;
+                      }
+                      else {
+                        leftPosition -= (profileLinkRight - windowWidth - 17);
+                      }
+                  }
+
+                  // adjust vertical placement so profile link isn't clipped on the bottom
+                  if (profileLinkBottom > (windowHeight + windowScrollHeight)) {
+                      topPosition -= ((profileLinkBottom - windowHeight - windowScrollHeight) - 21);
+                  }
+
+                  target.css({top: topPosition, left: leftPosition, position:'absolute'});
+
+
+                  target.mouseleave(function (event){
+                     target.fadeOut( 300, function() {
+                        target.remove();
+                      });
+                  });
+
+                  //mobile devices
+                  $('body').on('touchstart', function(e){
+                      if (target.is(':visible') && !target.is(e.target) && target.has(e.target).length === 0)
+                      {
+                        target.fadeOut( 300, function() {
+                            target.remove();
+                          });
+                      }
+                  });
+           }
+
+
+
+    let cardDiv = document.createElement('div');
+    cardDiv.classList.add('profile-card', 'add_background_color_white');
+    document.body.appendChild(cardDiv);
+    positionCard($(".profile-card"));
+    let result;
+   // asynchronous call
+    $.ajax({
+        url : profUrl,
+        type : 'GET',
+        tryCount : 0,
+        retryLimit : 1,
+        timeout: 3000,
+        beforeSend: function(){
+          //show spinner before request
+          cardDiv.innerHTML = `<div class="loade"></div>`;
+        },
+        success : function(data) {
+           result = $.parseJSON(JSON.stringify(data));
+           // creating cards in context of apps
+           switch(app)
+           {
+             case 'answers':
+                 card = new Card(cardDiv,'answers',result, locale, id, domain);
+                 card.create();
+                 break;
+             case 'fileexchange':
+                 card = new Card(cardDiv,'fileexchange',result, locale, id, domain);
+                 card.create();
+                 break;
+             case 'cody':
+                 card = new Card(cardDiv,'cody',result,locale, id, domain);
+                 card.create();
+                 break;
+             case 'blogs':
+                 card = new Card(cardDiv,'blogs',result, locale, id, domain);
+                 card.create();
+                 break;
+             case undefined:
+                 card = new Card(cardDiv,'cmtyhome',result, locale, id, domain);
+                 card.create();
+                 break;
+            }
+        },
+        error : function(xmlhttprequest, textstatus, message) {
+            //handling timeouts - retrying again
+            if (textstatus === 'timeout') {
+                this.tryCount++;
+                if (this.tryCount <= this.retryLimit) {
+                    $.ajax(this);
+                    return;
+                }
+
+                cardDiv.innerHTML = `<div class="alert alert-warning"> <span class="alert_icon icon-alert-error"></span><p class="alert_heading"><strong>Something went wrong</strong></p></div>Go to <a href="https://${domain}/matlabcentral/profile/authors/${id}" target = _blank> ${$(link).text() !== ""? $(link).text(): $("img",$(link)).first().attr("alt")} 's profile </a>`;
+                return;
+             }
+            // catch exceptions other than timeouts
+            else {
+              cardDiv.innerHTML = `<div class="alert alert-warning"> <span class="alert_icon icon-alert-error"></span><p class="alert_heading"><strong>Something went wrong</strong></p></div>Go to <a href="https://${domain}/matlabcentral/profile/authors/${id}" target = _blank> ${$(link).text() !== ""? $(link).text(): $("img",$(link)).first().attr("alt")} 's profile </a>`;
+            }
+        }
+
+    });
+
+    });
+
+           //function for abbreviating numbers greater than four digits
+
+            function abbreviateNumber(value) {
+              var tenThousand = 10000;
+              var million = 1000000;
+              var billion = 1000000000;
+              var trillion = 1000000000000;
+              if (value < tenThousand) {
+                     return value;
+              }
+              if (value >= tenThousand && value <= million) {
+                    return  Math.round(value/1000) + 'k';
+              }
+              if (value >= million && value <= billion) {
+                  return Math.round(value/million) + 'M';
+              }
+              if (value >= billion && value <= trillion) {
+                  return Math.round(value/billion) + 'B';
+              }
+           }
+
+
+           function numberWithCommas(x) {
+             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+           }
+
+
+          //CSS Block - Adding Global Styles
+
+          var style = document.createElement('style');
+          style.innerHTML = `
+                  .profile-card {
+                      z-index: 100;
+                      width: 	405px;
+                      min-height: 212px;
+                      padding: 15px;
+                      border: 1px solid #ccc;
+                      box-shadow: 5px 5px 9px rgba(204,204,204,0.5);
+                   }
+
+                   .profile_name{
+                      width: 250px;
+                      overflow:hidden;
+                      white-space:nowrap;
+                      text-overflow: ellipsis;
+                      color:#005487;
+                      font-size: 18px;
+                    }
+
+                   a:hover { text-decoration: none; }
+
+                   .community_stats {
+                      width: 100%;
+                      font-size:11px;
+                      white-space: nowrap;
+                      position: absolute;
+                      bottom: 0px;
+                    }
+
+                    /* Rating: star display */
+                    .rating_block { display: inline-block; }
+                    .rate_scale { color: #ccc; display: inline-block; font: 1em/1.75 'mathworks'; position: relative; }
+                    .rate_scale:before { content: '\\e677 \\e677 \\e677 \\e677 \\e677'; }
+
+                    .rated { color: #eec52a; overflow: hidden; position: absolute; left: 0; top: 0; white-space: nowrap; }
+                    .rated:before { content: '\\e677 \\e677 \\e677 \\e677 \\e677'; }
+
+                    .loade {
+                          border: 6px solid #f3f3f3;
+                          border-radius: 50%;
+                          border-top: 6px solid #09f;
+                          width: 50px;
+                          height: 50px;
+                          -webkit-animation: spin 1s linear infinite;
+                          animation: spin 1s linear infinite;
+                          margin: 0 auto;
+                        }
+
+                     @-webkit-keyframes spin {
+                          0% { -webkit-transform: rotate(0deg); }
+                          100% { -webkit-transform: rotate(360deg); }
+                        }
+                     @keyframes spin {
+                          0% { transform: rotate(0deg); }
+                          100% { transform: rotate(360deg); }
+                        }
+
+           `;
+           document.head.appendChild(style);
+
+});
+
+})(jQuery);

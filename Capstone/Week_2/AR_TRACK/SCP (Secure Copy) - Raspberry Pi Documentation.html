@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)https://www.raspberrypi.org/documentation/remote-access/ssh/scp.md -->
+<html lang="en-GB"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>SCP (Secure Copy) - Raspberry Pi Documentation</title>
+    <meta name="description" content="Need to access a Raspberry Pi, but don’t have a monitor spare? This section provides basic instructions for setting up remote access.">
+    <link rel="icon" type="image/png" href="https://www.raspberrypi.org/app/themes/mind-control/images/favicon.png">
+    <link rel="publisher" href="https://plus.google.com/+RaspberryPi">
+    <link rel="preconnect stylesheet" href="./SCP (Secure Copy) - Raspberry Pi Documentation_files/css" media="all" type="text/css">
+    <link rel="stylesheet" href="./SCP (Secure Copy) - Raspberry Pi Documentation_files/legacy.min.css">
+    <link rel="stylesheet" href="./SCP (Secure Copy) - Raspberry Pi Documentation_files/prism.css">
+    <script type="text/javascript" async="" src="./SCP (Secure Copy) - Raspberry Pi Documentation_files/ga.js.download"></script><script src="./SCP (Secure Copy) - Raspberry Pi Documentation_files/jquery.min.js.download"></script>
+    <script src="./SCP (Secure Copy) - Raspberry Pi Documentation_files/prism.js.download"></script>
+
+    <script type="text/javascript">//<![CDATA[
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-46270871-1']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+        //]]></script>
+
+    <link rel="canonical" href="https://www.raspberrypi.org/">
+    <link rel="shortlink" href="https://www.raspberrypi.org/">
+</head>
+
+<body class="documentation">
+    <header class="o-header">
+        <nav class="o-container o-header__container">
+            <a class="o-header__home-link" href="https://www.raspberrypi.org/">
+                <span class="u-visually-hidden">Home</span>
+            </a>
+
+            <div class="o-header__nav">
+                <ul class="c-nav">
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--products" href="https://www.raspberrypi.org/products/">
+                                Products                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--blog" href="https://www.raspberrypi.org/blog/">
+                                Blog                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--downloads" href="https://www.raspberrypi.org/downloads/">
+                                Downloads                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--community" href="https://www.raspberrypi.org/community/">
+                                Community                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--help" href="https://www.raspberrypi.org/help/">
+                                Help                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--forums" href="https://www.raspberrypi.org/forums/">
+                                Forums                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--education" href="https://www.raspberrypi.org/education/">
+                                Education                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--projects" href="https://projects.raspberrypi.org/?ref=nav">
+                                Projects                            </a>
+                        </li>
+                                    </ul>
+            </div>
+
+            <div class="o-header__spacer"></div>
+
+            <div class="o-header__search-toggle">
+                <span aria-hidden="true" class="c-search-toggle">
+                    <span class="u-visually-hidden">Open Search Input</span>
+                </span>
+            </div>
+
+            <div class="o-header__toggle">
+                <span aria-hidden="true" class="c-nav-toggle">
+                    <span class="c-nav-toggle__icon">
+                        <span class="c-nav-toggle__icon-inner">
+                            <span class="u-visually-hidden">Open Navigation</span>
+                        </span>
+                    </span>
+                </span>
+            </div>
+        </nav>
+    </header>
+
+    <div class="o-header__search">
+        <form action="https://www.raspberrypi.org/" class="c-search" role="search" method="GET">
+            <div class="o-container c-search__container">
+                <input type="search" class="c-search__input" placeholder="Search Raspberry Pi" name="s">
+                <button class="c-search__submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var header = document.querySelector('.o-header')
+        var navToggle = document.querySelector('.c-nav-toggle')
+
+        navToggle.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            header.classList.toggle('o-header--nav-open')
+
+            document.querySelector('.c-nav-toggle__icon').classList.toggle('c-nav-toggle__icon--open')
+            document.querySelector('.c-nav-toggle__icon-inner').classList.toggle('c-nav-toggle__icon-inner--open')
+        })
+
+        var searchToggle = document.querySelector('.c-search-toggle')
+
+        searchToggle.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            var searchContainer = document.querySelector('.o-header__search')
+            var searchInput = document.querySelector('.c-search__input')
+
+            searchInput.blur()
+            searchToggle.classList.toggle('c-search-toggle--open')
+            searchContainer.classList.toggle('o-header__search--open')
+
+            if (searchContainer.classList.contains('o-header__search--open')) {
+                searchInput.focus()
+            }
+        })
+    </script>
+
+    <div class="container">
+        <div class="main">
+
+<nav class="breadcrumbs">
+    <a href="https://www.raspberrypi.org/documentation">documentation</a> &gt; <a href="https://www.raspberrypi.org/documentation/remote-access">remote-access</a> &gt; <a href="https://www.raspberrypi.org/documentation/remote-access/ssh">ssh</a> &gt; scp</nav>
+
+<article class="entry-content">
+    <h1>SCP (Secure Copy)</h1>
+<p><code>scp</code> is a command for sending files over SSH. This means you can copy files between computers, say from your Raspberry Pi to your desktop or laptop, or vice-versa.</p>
+<p>First of all, you'll need to know your Raspberry Pi's <a href="https://www.raspberrypi.org/documentation/remote-access/ip-address.md">IP address</a>.</p>
+<h2>Copying files to your Raspberry Pi</h2>
+<p>Copy the file <code>myfile.txt</code> from your computer to the <code>pi</code> user's home folder of your Raspberry Pi at the IP address <code>192.168.1.3</code> with the following command:</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> myfile.txt pi@192.168.1.3:</code></pre>
+<p>Copy the file to the <code>/home/pi/project/</code> directory on your Raspberry Pi (the <code>project</code> folder must already exist):</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> myfile.txt pi@192.168.1.3:project/</code></pre>
+<h2>Copying files from your Raspberry Pi</h2>
+<p>Copy the file <code>myfile.txt</code> from your Raspberry Pi to the current directory on your other computer:</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> pi@192.168.1.3:myfile.txt <span class="token builtin class-name">.</span></code></pre>
+<h2>Copying multiple files</h2>
+<p>Copy multiple files by separating them with spaces:</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> myfile.txt myfile2.txt pi@192.168.1.3:</code></pre>
+<p>Alternatively, use a wildcard to copy all files matching a particular search with:</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> *.txt pi@192.168.1.3:</code></pre>
+<p>(all files ending in <code>.txt</code>)</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> m* pi@192.168.1.3:</code></pre>
+<p>(all files starting with <code>m</code>)</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> m*.txt pi@192.168.1.3:</code></pre>
+<p>(all files starting with <code>m</code> and ending in <code>.txt</code>)</p>
+<h2>Filenames with spaces</h2>
+<p>Note that some of the examples above will not work for file names containing spaces. Names like this need to be encased in quotes:</p>
+<pre class=" language-bash"><code class=" language-bash"><span class="token function">scp</span> <span class="token string">"my file.txt"</span> pi@192.168.1.3:</code></pre></article>
+
+                <footer class="licence">
+                    <aside class="octocat">
+                        <a href="https://github.com/raspberrypi/documentation/blob/master/remote-access/ssh/scp.md"><img src="./SCP (Secure Copy) - Raspberry Pi Documentation_files/octocat.jpg"></a>
+                    </aside>
+                    <aside class="links">
+                        <a href="https://github.com/raspberrypi/documentation/blob/master/remote-access/ssh/scp.md" class="github">View/Edit this page on GitHub</a><br>
+                        <a href="https://www.raspberrypi.org/creative-commons/">Read our usage and contributions policy</a><br>
+                        <a href="https://www.raspberrypi.org/creative-commons/" class="cc"><img src="./SCP (Secure Copy) - Raspberry Pi Documentation_files/88x31.png" alt="Creative Commons Licence"></a>
+                    </aside>
+                </footer>
+
+                <div style="clear: both;"></div>
+
+            </div>
+
+        <div style="clear: both;"></div>
+    </div>
+
+    <footer class="o-footer">
+        <div class="o-footer__slice">
+            <div class="o-container o-footer__container">
+                <div class="o-footer__nav">
+                    <div class="c-footer-nav">
+                        <span class="c-footer-nav__title">About Us</span>
+
+                        <ul class="c-footer-nav__list">
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about">About us</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about/meet-the-team">Our team</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about/governance">Governance</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/safeguarding">Safeguarding</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about/supporters">Our supporters</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://raspberrypi.workable.com/">Jobs</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/contact">Contact us</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="o-footer__nav">
+                    <div class="c-footer-nav">
+                        <span class="c-footer-nav__title">Support</span>
+
+                        <ul class="c-footer-nav__list">
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/help">Help</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/documentation">Documentation</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://projects.raspberrypi.org/">Projects</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/training">Training</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/downloads">Downloads</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/research-and-insights">Research</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/help/faqs">FAQ</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="o-footer__newsletter">
+                    <form action="https://raspberrypi.hosted.phplist.com/lists/?p=subscribe&amp;id=1" class="c-footer-newsletter" method="POST">
+                        <span class="c-footer-newsletter__legend">
+                            Sign up to our newsletter
+                        </span>
+                        <input class="c-footer-newsletter__input" name="email" placeholder="Your email here" required="" type="email">
+                        <input type="hidden" name="htmlemail" value="1">
+                        <input type="hidden" name="list[3]" value="signup">
+                        <input type="hidden" name="listname[3]" value="Raspberry Pi Weekly">
+                        <input class="c-footer-newsletter__input--verification-code" type="text" name="VerificationCodeX" value="" size="20">
+                        <button class="c-footer-newsletter__button" name="subscribe">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+
+                <div class="o-footer__info">
+                    <ul class="c-footer-social">
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--facebook" href="https://www.facebook.com/raspberrypi">
+                                <span class="u-visually-hidden">Like Raspberry Pi on Facebook</span>
+                            </a>
+                        </li>
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--twitter" href="https://twitter.com/Raspberry_Pi">
+                                <span class="u-visually-hidden">Follow Raspberry Pi on Twitter</span>
+                            </a>
+                        </li>
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--instagram" href="https://www.instagram.com/raspberrypifoundation/">
+                                <span class="u-visually-hidden">Check out what we’re having for lunch on Instagram</span>
+                            </a>
+                        </li>
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--youtube" href="https://youtube.com/raspberrypi">
+                                <span class="u-visually-hidden">Subscribe to the Raspberry Pi YouTube channel</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <p class="c-footer-charity">
+                        Raspberry Pi Foundation<br>
+                        UK Registered Charity 1129409
+                    </p>
+
+                    <p class="c-footer-additional">
+                        <a class="c-footer-additional__link" href="https://www.raspberrypi.org/privacy">Privacy</a>
+                        <a class="c-footer-additional__link" href="https://www.raspberrypi.org/cookies">Cookies</a>
+                        <a class="c-footer-additional__link" href="https://www.raspberrypi.org/trademark-rules">Trademark rules and brand guidelines</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+</body></html>

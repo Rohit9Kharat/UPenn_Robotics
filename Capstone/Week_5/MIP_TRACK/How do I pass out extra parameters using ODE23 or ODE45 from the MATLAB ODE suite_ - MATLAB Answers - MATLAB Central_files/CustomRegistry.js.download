@@ -1,0 +1,67 @@
+define("shared/RichEditor/CustomRegistry", [], function () {
+
+    return {
+        plugins: [
+            {
+                id: "learningtool.movekeycapturewithcursor",
+                path: "shared/RichEditor/CustomPlugins/MoveKeyCaptureWithCursor/MoveKeyCaptureWithCursorPluginProvider"
+            },
+
+            {
+                id: "learningtool.locklines",
+                path: "shared/RichEditor/CustomPlugins/LockLines/LockLinesPluginProvider",
+                subsystem: "rtc.left.margin"
+            },
+
+            {
+                id: "rtc.embeddedoutputs.statelessrequestexecutor",
+                path: "shared/RichEditor/CustomPlugins/StatelessExecutor/StatelessRequestExecutorProvider",
+                family: "embeddedoutputs",
+                subsystem: "rtc.requestexecutors"
+            },
+
+            {
+                id: "rtc.embeddedoutputs.triggers.statelesstrigger",
+                path: "shared/RichEditor/CustomPlugins/StatelessExecutor/StatelessRunAllTriggerProvider",
+                family: "embeddedoutputs"
+            },
+            {
+                id: "rtc.embeddedoutputs.executionenabler",
+                path: "shared/RichEditor/CustomPlugins/StatelessExecutor/AlwaysEnabledExecutionEnablerProvider",
+                family: "embeddedoutputs"
+            },
+            {
+                id: "rtc.saveload.editorsaveload",
+                path: "shared/RichEditor/CustomPlugins/SaveLoad/EditorSaveLoadProvider"
+            },
+            {
+                id: "rtc.autogrow",
+                path: "shared/RichEditor/CustomPlugins/AutoGrow/AutoGrowPluginProvider"
+            },
+            {
+                id: "rtc.webfocusmanager",
+                path: "shared/RichEditor/CustomPlugins/FocusManager/FocusManagerPluginProvider"
+            },
+            {
+                id: "rtc.defaulttoolbar",
+                path: "shared/RichEditor/CustomPlugins/DefaultToolbar/DefaultToolbarPluginProvider"
+            },
+            {
+                id: "rtc.responsiveimage",
+                path: "shared/RichEditor/CustomPlugins/ResponsiveImage/ResponsiveImagePluginProvider"
+            },
+            {
+                id: "rtc.webcompacttoolstrip",
+                path: "shared/RichEditor/CustomPlugins/CompactToolstrip/CompactToolstripPluginProvider"
+            },
+            {
+                id: "rtc.answerstoolstrip.textStyle",
+                path: "shared/RichEditor/CustomPlugins/AnswersToolstrip/textstyletoolstrip/TextStyleToolstripProvider"
+            },
+            {
+                id: "rtc.answerstoolstrip",
+                path: "shared/RichEditor/CustomPlugins/AnswersToolstrip/AnswersToolstripPluginProvider"
+            }
+        ]
+    };
+});

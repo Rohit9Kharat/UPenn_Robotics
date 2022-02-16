@@ -1,0 +1,31 @@
+A Basic Program to Move the Rover
+Now that you've set up ssh for the Pi, ssh into the Pi, and navigate to the folder:
+
+/home/pi/catkin_ws/src/robot_control/src/
+
+In this folder, you will find the function RobotControl.py. This will be your main script for controlling the Pi. It imports the ROSInterface class, which interacts with the Robotic Operating System framework and gathers information from the sensors as well as sending information to the motors.
+
+Using your preferred file editor, edit RobotControl.py. The function you will work with is process_measurements(), at line 39. This function is called at 60Hz when the script is run, and is very similar to the one you used for the simulator. The interface commands are the same as the simulator, except we now use self.ros_interface instead of self.robot_sim. The three functions are:
+
+self.ros_interface.get_measurements(), self.ros_interface.get_imu() and self.ros_interface.command_velocity(lin_vel, ang_vel)
+
+They have the same inputs and outputs as in the simulator. To test moving the rover, let's command the robot to move with a linear velocity of 30cm/s. That is:
+
+self.ros_interface.command_velocity(0.3, 0)
+
+Save the file, and move to the next section, where we will run this piece of code.
+
+Running your Code
+You will need two terminal windows to run your code. To do this, you can just ssh to the Pi in two separate windows.
+
+In the first terminal window, run the following command:
+
+roslaunch robot_launch robot.launch
+
+The robot.launch file contains the packages that control the robot. Namely, they are the AprilTag detector, the IMU driver, the camera driver and the motor driver. You won't need most of them except the motor driver for this reading, but it doesn't hurt to run them all.
+
+In the second terminal window, launch your RobotControl code with the following:
+
+roslaunch robot_control robot_control.launch
+
+With the code from the previous section, you should see the rover move forwards. To stop the rover, type Ctrl-C to kill the program. Don't worry if the speed is too quick or too slow, we will calibrate this next week.

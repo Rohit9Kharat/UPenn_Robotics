@@ -1,0 +1,104 @@
+/* Copyright 2017 The MathWorks, Inc. */
+
+define("shared/RichEditor/HTMLDivWriter", [
+    "dojo/_base/declare",
+    "dojo/dom-class",
+    "dojo/dom-style",
+    "MW/rtc/plugins/view/exporters/HTMLContentWriter"
+], function (declare, domClass, domStyle, HTMLContentWriter) {
+
+    return declare(HTMLContentWriter, {
+
+        _COMMENT_COLOR: "rgb(60, 118, 61)",
+        _KEYWORD_COLOR: "rgb(0, 0, 255)",
+        _STRING_COLOR:  "rgb(160, 32, 240)",
+        _UNDET_COLOR:   "rgb(178, 0, 0)",
+        _SYSCOMMAND_COLOR: "rgb(178, 140, 0)",
+
+
+        /**
+         * Subclass of HTMLContentWriter which produces an HTML DIV element w/o surroundig tags
+         * and w/o most inline styles.
+         * @constructor HTMLDivWriter
+         */
+        constructor: function () {
+
+        },
+
+        /**
+         * Returns the attributes for the given node, which will be used for creating the HTML tag
+         * of the node's content.
+         *
+         * @returns {String} A list of node attributes.
+         */
+        _getAttributes: function (node) {
+
+            var classNames = node.className;
+
+            if (node.rteNode) {
+                if (node.rteNode.bold) {
+                    classNames += " bold";
+                }
+                if (node.rteNode.italic) {
+                    classNames += " italic";
+                }
+                if (node.rteNode.underline) {
+                    classNames += " underline";
+                }
+                if (node.rteNode.monospace) {
+                    classNames += " monospace";
+                }
+            }
+
+            var styleString = '';
+            var style = domStyle.getComputedStyle(node);
+
+            var align = style["text-align"];
+            if (align !== "start" && align !== "left") {
+                styleString += "text-align" + ": " + style["text-align"] + "; ";
+            }
+
+            if (domClass.contains(node, "textWrapper") && style.color !== "rgb(0, 0, 0)") {
+                switch(style.color) {
+                    case this._COMMENT_COLOR:
+                        classNames += " Comment";
+                        break;
+                    case this._KEYWORD_COLOR:
+                        classNames += " Keyword";
+                        break;
+                    case this._STRING_COLOR:
+                        classNames += " String";
+                        break;
+                    case this._UNDET_COLOR:
+                        classNames += " UndetString";
+                        break;
+                    case this._SYSCOMMAND_COLOR:
+                        classNames += " SysCommand";
+                        break;
+
+                }
+            }
+
+            var attr = ' class="' + classNames + '"';
+
+            if (styleString.length > 0) {
+                attr += ' style = "' + styleString + '"';
+            }
+
+            return attr;
+        },
+
+        /**
+         * Overload to write a content DIV and the source within the body
+         * @return {string} HTML string
+         */
+        _write: function () {
+
+            this._writeBody();
+
+            return "<div class = 'rtcContent'>" + this._body + "</div>";
+
+        }
+
+    });
+});

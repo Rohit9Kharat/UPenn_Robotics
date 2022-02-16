@@ -1,0 +1,2 @@
+testpath = 'F:\ROBOTICS\Coursera Robotics\Robotics_5_Estimation and Learning\Week 4\AssignmentWEEK4\AssignmentWEEK4'; % This is the folder where test.mat is saved. Change the path if needed.
+eval_progW4(testpath)

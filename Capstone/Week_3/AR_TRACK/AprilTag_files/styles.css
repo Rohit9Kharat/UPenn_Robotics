@@ -1,0 +1,359 @@
+* {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+pre, code {
+    font-family: "Courier New", Courier, monospace;
+}
+
+div#header {
+    display: block;
+    background-color: #9191b9;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin: 0px;
+    padding: 0px;
+    height: 100px;
+    text-align:center;
+    width: 100%;
+    overflow: hidden;
+}
+
+div#header img
+{
+    float: left;
+    margin-left: 5px;
+    margin-right: 15px;
+    border: 0px;
+}
+
+div#header ul
+{
+    list-style-type: none;
+}
+
+div#header ul li
+{
+    list-style: none;
+    width: 100px;
+    float: left;
+    text-align: left;
+    margin-top: 50px;
+}
+
+div#header a
+{
+    font-size: 1.0em;
+    text-decoration: none;
+    display: block;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+div#header p
+{
+    font-size: 1.0em;
+    text-decoration: none;
+    display: block;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+div#header a:hover, div#header a:active
+{
+    text-decoration: none;
+    display: block;
+    color: #44ff44;
+    text-align: center;
+}
+
+/**********************************************/
+div#newscolumn {
+    width: 28%;
+    float: left;
+    overflow: hidden;
+    border-right-style: solid;
+    border-color: #dddddd;
+    padding-right: 10px;
+    margin-right: 10px;
+    border-width: 1px;
+}
+
+.newsitem {
+    font-size: 0.8em;
+}
+
+img.newsitem {
+    float: right;
+    margin: 5px;
+}
+
+hr.newsitem {
+    border: none 0;
+    border-top: 1px dashed #888888;
+    clear: both;
+}
+
+h1.newsitem {
+    font-size: 1.0em;
+    text-align: left;
+    margin: 5px;
+}
+
+p.newsitem {
+    font-size: 1em;
+    text-align: left;
+    margin: 5px;
+}
+
+a.newsitem {
+    display: block;
+    width: 100%;
+    background-color: #ffffff;
+    text-decoration: none;
+    color: #000000;
+}
+
+a.newsitem:hover  {
+    display: block;
+    width: 100%;
+    background-color: #dddddd;
+}
+
+div#maincolumn {
+    height: 95%;
+    width: 66%;
+    overflow: hidden;
+    margin-left: 30px;
+    margin-right: 0px;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.25em;
+}
+
+p {
+    font-size: 0.9em;
+}
+
+/**********************************************/
+div#footer
+{
+}
+
+div#footer p
+{
+    font-size: 0.8em;
+}
+
+div#footer img
+{
+    float: left;
+    margin-right: 15px;
+    border: 0px;
+}
+
+img.footer_seal
+{
+    float: left;
+}
+
+img.footer_headshot
+{
+    float: right;
+}
+
+/**********************************************/
+div#paperlist {
+    height: 80%;
+}
+
+a.paperlist {
+    display: block;
+    width: 100%;
+    background-color: #ffffff;
+    text-decoration: none;
+    color: #000000;
+}
+
+a.paperlist:hover  {
+    display: block;
+    width: 100%;
+    background-color: #dddddd;
+}
+
+img.paperlist {
+    display: inline;
+    float: left;
+    margin: 5px;
+    margin-left: 30px;
+    margin-right: 15px;
+}
+
+.paperlist_title {
+    font-size: 1em;
+    text-align: left;
+    margin: 5px;
+}
+
+.paperlist_authors {
+    font-size: 0.7em;
+    text-align: left;
+    margin: 5px;
+}
+
+.paperlist_venue {
+    font-size: 0.7em;
+    text-align: left;
+    font-style: italic;
+    margin: 5px;
+}
+
+/**********************************************/
+div.person {
+    margin: 20px;
+    float: left;
+}
+
+img.people_list {
+    width: 160px;
+    height: 192px;
+}
+
+.people_name {
+    font-size: 1.0em;
+    margin: 0em;
+    text-align: center;
+}
+
+.people_title {
+    font-size: 0.8em;
+    margin: 0em;
+    text-align: center;
+}
+
+.people_email_url {
+    font-size: 0.8em;
+    margin: 0em;
+    text-align: center;
+}
+
+/**********************************************************/
+div.project {
+    border-top-style: solid;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    width: 90%;
+    float: left;
+    overflow: hidden;
+    border-color: #dddddd;
+    padding-top: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    border-width: 2px;
+}
+
+.project_title {
+    float: left;
+    font-size: 1.1em;
+    border-width: 1px;
+    width: 100%;
+    border-bottom-style: solid;
+    border-color: #dddddd;
+    padding-bottom: 5px;
+}
+
+img.project {
+    float: right;
+    padding-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.project_description {
+    float: left;
+    padding-top: 5px;
+    font-size: 0.8em;
+    color: #444444;
+}
+
+/**********************************************************/
+div#paper_pdf {
+    text-align: center;
+    float: right;
+    margin-left: 30px;
+    margin-bottom:30px;
+}
+
+div#paper_bibtex {
+}
+
+div#paper_abstract {
+
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+/**********************************/
+div.slide {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    margin: 0px;
+    opacity: 0;
+    zoom: 1.0;
+    display: none;
+}
+
+.slide_button, .slide_button:link, .slide_button:visited {
+    padding: 20px;
+    display: inline;
+    cursor: pointer;
+    float: right;
+    margin-top: -42px;
+    color: #aaaaaa;
+    opacity: 1.0;
+}
+
+.slide_button:hover {
+    color: #5555dd;
+}
+
+.slide_button:active {
+    color: #bbbbff;
+}
+
+.slideshow-post img {
+    display: block;
+    margin: 0 auto;
+    max-width: 500px;
+}
+
+.classes p {
+    margin-left: 20px;
+}
+
+video {
+    text-align: center;
+}
+
+.courselist li {
+    padding-bottom:30px;
+}
